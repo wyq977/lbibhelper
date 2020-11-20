@@ -28,8 +28,9 @@ class LbibhelperMain:
         self.banner = f"\n{'*' * 28}\n**   LBIBCell helper CLI  **\n{'*' * 28}"
         print(self.banner)
 
-
-        parser = argparse.ArgumentParser(description="lbibhelper CLI", usage=self._usage())
+        parser = argparse.ArgumentParser(
+            description="lbibhelper CLI", usage=self._usage()
+        )
         parser.add_argument("command", help="command from the above list to run")
 
         # Flag for unit testing
@@ -69,12 +70,14 @@ class LbibhelperMain:
             prog="lb solver", description=f"{self.solver.__doc__}"
         )
         parser.add_argument(
-            "-i",
-            "--input_dir",
-            required=True,
+            "-i", "--input_dir", required=True, help="LBIBCell output dir"
         )
-        parser.add_argument("--png", action="store_true")
-        parser.add_argument("--gif", action="store_true")
+        parser.add_argument(
+            "--png", action="store_true", help="Whether to plot solve pics"
+        )
+        parser.add_argument(
+            "--gif", action="store_true", help="Whether to make gif from *png"
+        )
         args = parser.parse_args(arguments)
 
         try:
@@ -86,13 +89,14 @@ class LbibhelperMain:
         solver_processor.save_npy()
         if args.png:
             solver_processor.plot_solver()
-        if args.png:
+        if args.gif:
             solver_processor.png_to_gif()
 
 
 def main():
     cli = LbibhelperMain()
     return cli()
+
 
 if __name__ == "__main__":
     sys.exit(main())  # pragma: no cover
