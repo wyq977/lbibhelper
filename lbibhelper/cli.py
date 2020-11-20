@@ -25,12 +25,11 @@ def register(func):
 @registerableCLI
 class LbibhelperMain:
     def __init__(self, test_mode: bool = False):
-        self.banner = f"\n{'*' * 43}\n**      LBIBCell helper function Programming Language      **\n{'*' * 43}"
+        self.banner = f"\n{'*' * 28}\n**   LBIBCell helper CLI  **\n{'*' * 28}"
         print(self.banner)
 
-        print(self._get_friend_links())
 
-        parser = argparse.ArgumentParser(description="Taichi CLI", usage=self._usage())
+        parser = argparse.ArgumentParser(description="lbibhelper CLI", usage=self._usage())
         parser.add_argument("command", help="command from the above list to run")
 
         # Flag for unit testing
@@ -95,6 +94,5 @@ def main():
     cli = LbibhelperMain()
     return cli()
 
-
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main())  # pragma: no cover

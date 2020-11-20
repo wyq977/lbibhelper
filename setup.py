@@ -37,7 +37,7 @@ setup(
     description="Python helper for easy manage LBIBCell simulation",
     entry_points={
         "console_scripts": [
-            "lbibhelper=lbibhelper.cli:main",
+            "lb=lbibhelper.cli:main",
         ],
     },
     install_requires=requirements,
