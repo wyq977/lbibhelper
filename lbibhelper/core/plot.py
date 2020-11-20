@@ -1,6 +1,6 @@
 # https://stackoverflow.com/questions/17687213/how-to-obtain-the-same-font-style-size-etc-in-matplotlib-output-as-in-latex
 # https://jwalton.info/Embed-Publication-Matplotlib-Latex/
-myscript_tex_fonts = {
+tex_fonts = {
     # Use LaTeX to write all text
     "text.usetex": True,
     "font.family": "serif",
@@ -52,5 +52,5 @@ def get_inch_from_pts(width, fraction=1):
 
 __all__ = [
     "get_inch_from_pts",
-    "myscript_tex_fonts",
+    "tex_fonts",
 ]

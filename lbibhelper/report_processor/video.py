@@ -1,4 +1,4 @@
-from myscript.core.settings import warning
+from lbibhelper.core.settings import warning
 
 # from myproject.models import some_model
 import os

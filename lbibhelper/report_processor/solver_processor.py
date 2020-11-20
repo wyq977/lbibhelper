@@ -5,8 +5,8 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from mpl_toolkits.axes_grid1 import make_axes_locatable, axes_size
-from myscript.core.settings import *
-from myscript.core.plot import get_inch_from_pts, myscript_tex_fonts
+from lbibhelper.core.settings import *
+from lbibhelper.core.plot import get_inch_from_pts, tex_fonts
 from .video import png_to_gif
 
 
@@ -47,7 +47,7 @@ def plot_solver_matrix(
     height = get_inch_from_pts(345)
     width = height * width_to_height + 2
     if rcParams:
-        mpl.rcParams.update(myscript_tex_fonts)
+        mpl.rcParams.update(tex_fonts)
 
     fig = plt.figure(figsize=(width, height))
     ax = plt.gca()
