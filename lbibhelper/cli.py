@@ -3,6 +3,7 @@ import argparse
 import sys
 
 from lbibhelper.report_processor.solver_processor import SolverProcessor
+from lbibhelper.report_processor.video import png_to_gif
 from lbibhelper.core.settings import check_exists
 
 
@@ -62,15 +63,43 @@ class LbibhelperMain:
         for command in sorted(self.registered_commands):
             msg += f"    {command}{' ' * (space - len(command))}|-> {getattr(self, command).__doc__}\n"
         return msg
+    
+    @register
+    def gif(self, arguments: list = sys.argv[2:]):
+        """Convert the pictures in a directory as gif"""
+        parser = argparse.ArgumentParser(
+            prog="lb gif", description=f"{self.gif.__doc__}"
+        )
+        parser.add_argument(
+            "-i", "--input_files", required=True, help="Directory of pics"
+        )
+        parser.add_argument(
+            "-f", "--fps", type=int, default=24, help="FPS of the gif"
+        )
+        parser.add_argument(
+            "-o", "--output", type=str, required=True, help="Output.gif"
+        )
+        args = parser.parse_args(arguments)
+
+        try:
+            check_exists(args.input_files)
+        except FileNotFoundError:
+            pass
+        
+        png_to_gif(args.input_files, args.fps, args.output)
+
 
     @register
     def solver(self, arguments: list = sys.argv[2:]):
-        """Make a video using *.png files in the current directory"""
+        """Process solver output from LBIBCell"""
         parser = argparse.ArgumentParser(
             prog="lb solver", description=f"{self.solver.__doc__}"
         )
         parser.add_argument(
             "-i", "--input_dir", required=True, help="LBIBCell output dir"
+        )
+        parser.add_argument(
+            "--force", action="store_true", help="Whether to overwrite exist files if they exist"
         )
         parser.add_argument(
             "--png", action="store_true", help="Whether to plot solve pics"
@@ -85,7 +114,7 @@ class LbibhelperMain:
         except FileNotFoundError:
             pass
 
-        solver_processor = SolverProcessor(args.input_dir)
+        solver_processor = SolverProcessor(args.input_dir, args.force)
         solver_processor.save_npy()
         if args.png:
             solver_processor.plot_solver()

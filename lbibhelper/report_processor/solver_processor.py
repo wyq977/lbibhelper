@@ -63,7 +63,8 @@ def plot_solver_matrix(
     width = axes_size.AxesY(ax, aspect=1.0 / aspect)
     pad = axes_size.Fraction(pad_fraction, width)
     cax = divider.append_axes("right", size=width, pad=pad)
-    cbar = plt.colorbar(mappable, cax=cax)
+    cbar = plt.colorbar(img, cax=cax)
+    # cbar = plt.colorbar(mappable, cax=cax) # not working on Euler
     cbar.set_label("Shh gradient (LogNorm)")
     # plt.tight_layout()
 
@@ -123,8 +124,9 @@ def get_solver_mat(file, flatten=False):
 
 
 class SolverProcessor:
-    def __init__(self, output_dir):
+    def __init__(self, output_dir, force_reset=False):
         self.directory = output_dir
+        self.force_reset = force_reset
         try:
             check_exists(output_dir)
         except FileNotFoundError:
@@ -206,6 +208,10 @@ class SolverProcessor:
             filename, _ = os.path.splitext(f)
             npy = "{}.npy".format(filename)
 
+            # skip if present
+            if not self.force_reset and os.path.isfile(npy):
+                continue
+
             try:
                 f_out = open(f, "r")
             except IOError:
@@ -253,6 +259,9 @@ class SolverProcessor:
             figname = os.path.join(
                 self.get_solver_directory(), "{}.png".format(filename)
             )
+            # skip if present
+            if not self.force_reset and os.path.isfile(figname):
+                continue
 
             plot_solver_matrix(npy, SHIFT_TMP, vmin, vmax, figname)
             print(f"\rPlotting {figname}...", end="")
