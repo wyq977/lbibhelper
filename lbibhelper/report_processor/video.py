@@ -1,6 +1,5 @@
 from lbibhelper.core.settings import warning
 
-# from myproject.models import some_model
 import os
 
 # taken from https://github.com/taichi-dev/taichi/blob/master/python/taichi/tools/video.py

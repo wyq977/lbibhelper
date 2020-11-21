@@ -3,6 +3,7 @@ import argparse
 import sys
 
 from lbibhelper.report_processor.solver_processor import SolverProcessor
+from lbibhelper.report_processor.vtk_cell_processor import vtkCellProcessor
 from lbibhelper.report_processor.video import png_to_gif
 from lbibhelper.core.settings import check_exists
 
@@ -63,7 +64,7 @@ class LbibhelperMain:
         for command in sorted(self.registered_commands):
             msg += f"    {command}{' ' * (space - len(command))}|-> {getattr(self, command).__doc__}\n"
         return msg
-    
+
     @register
     def gif(self, arguments: list = sys.argv[2:]):
         """Convert the pictures in a directory as gif"""
@@ -73,9 +74,7 @@ class LbibhelperMain:
         parser.add_argument(
             "-i", "--input_files", required=True, help="Directory of pics"
         )
-        parser.add_argument(
-            "-f", "--fps", type=int, default=24, help="FPS of the gif"
-        )
+        parser.add_argument("-f", "--fps", type=int, default=24, help="FPS of the gif")
         parser.add_argument(
             "-o", "--output", type=str, required=True, help="Output.gif"
         )
@@ -85,9 +84,8 @@ class LbibhelperMain:
             check_exists(args.input_files)
         except FileNotFoundError:
             pass
-        
-        png_to_gif(args.input_files, args.fps, args.output)
 
+        png_to_gif(args.input_files, args.fps, args.output)
 
     @register
     def solver(self, arguments: list = sys.argv[2:]):
@@ -99,7 +97,9 @@ class LbibhelperMain:
             "-i", "--input_dir", required=True, help="LBIBCell output dir"
         )
         parser.add_argument(
-            "--force", action="store_true", help="Whether to overwrite exist files if they exist"
+            "--force",
+            action="store_true",
+            help="Whether to overwrite exist files if they exist",
         )
         parser.add_argument(
             "--png", action="store_true", help="Whether to plot solve pics"
@@ -120,6 +120,49 @@ class LbibhelperMain:
             solver_processor.plot_solver()
         if args.gif:
             solver_processor.png_to_gif()
+
+    @register
+    def cell(self, arguments: list = sys.argv[2:]):
+        """Process vtk cell output from LBIBCell"""
+        parser = argparse.ArgumentParser(
+            prog="lb cell", description=f"{self.cell.__doc__}"
+        )
+        parser.add_argument(
+            "-i", "--input_dir", required=True, help="LBIBCell output dir"
+        )
+        parser.add_argument(
+            "--force",
+            action="store_true",
+            help="Whether to overwrite exist files if they exist",
+        )
+        parser.add_argument(
+            "--png", action="store_true", help="Whether to plot cell pics"
+        )
+        parser.add_argument(
+            "--cell_type",
+            action="store_true",
+            default=True,
+            help="Whether to plot cell type",
+        )
+        parser.add_argument(
+            "--gif", action="store_true", help="Whether to make gif from *png"
+        )
+        parser.add_argument("-w", "--width", required=True, help="LBIBCell output dir")
+        parser.add_argument("-h", "--height", required=True, help="LBIBCell output dir")
+        args = parser.parse_args(arguments)
+
+        try:
+            check_exists(args.input_dir)
+        except FileNotFoundError:
+            pass
+
+        vtk_cell_processor = vtkCellProcessor(
+            args.input_dir, args.force, width=args.width, height=args.height
+        )
+        if args.png:
+            vtk_cell_processor.plot_mesh(args.cell_type)
+        if args.gif:
+            vtk_cell_processor.png_to_gif()
 
 
 def main():

@@ -1,4 +1,3 @@
-from genericpath import exists
 import os
 import numpy as np
 import matplotlib as mpl
@@ -10,7 +9,7 @@ from lbibhelper.core.plot import get_inch_from_pts, tex_fonts
 from .video import png_to_gif
 
 
-if get_os_name() == "linux":
+if is_on_euler():
     plt.switch_backend("Agg")
 
 
