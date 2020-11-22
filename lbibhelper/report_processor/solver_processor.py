@@ -24,10 +24,7 @@ def plot_solver_matrix(
     # TODO: fix LogNorm issue: now shifting by SHIFT to avoid issue with 0.0
     # TODO: ticks and label formatting for colobar
     # https://stackoverflow.com/questions/35728665/matplotlib-colorbar-tick-label-formatting
-    try:
-        mat = np.load(filename)
-    except IOError:
-        raise IOError(f'Solver output: "{filename}" cannot be opened')
+    mat = get_solver_mat(filename)
 
     aspect = 20
     pad_fraction = 0.5
@@ -107,10 +104,9 @@ def _get_size(file):
 def get_solver_mat(file, flatten=False):
     filename, _ = os.path.splitext(file)
     npy = "{:s}.npy".format(filename)
-    if os.path.isfile(npy):
+    if check_exists(npy):
         mat = np.load(npy)
     else:
-        print("sdasd")
         size_x, size_y = _get_size(file)
         mat = _get_np_from_txt(file, size_x, size_y)
         np.save(npy, mat)
