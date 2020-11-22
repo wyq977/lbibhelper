@@ -147,8 +147,8 @@ class LbibhelperMain:
         parser.add_argument(
             "--gif", action="store_true", help="Whether to make gif from *png"
         )
-        parser.add_argument("-w", "--width", required=True, help="LBIBCell output dir")
-        parser.add_argument("-h", "--height", required=True, help="LBIBCell output dir")
+        parser.add_argument("--width", default=1024, help="LBIBCell output dir")
+        parser.add_argument("--height", default=768, help="LBIBCell output dir")
         args = parser.parse_args(arguments)
 
         try:
