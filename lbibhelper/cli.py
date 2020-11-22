@@ -2,7 +2,10 @@
 import argparse
 import sys
 
-from lbibhelper.report_processor.solver_processor import SolverProcessor
+from lbibhelper.report_processor.solver_processor import (
+    SolverProcessor,
+    plot_solver_matrix,
+)
 from lbibhelper.report_processor.vtk_cell_processor import vtkCellProcessor
 from lbibhelper.report_processor.video import png_to_gif
 from lbibhelper.core.settings import check_exists
@@ -94,7 +97,11 @@ class LbibhelperMain:
             prog="lb solver", description=f"{self.solver.__doc__}"
         )
         parser.add_argument(
-            "-i", "--input_dir", required=True, help="LBIBCell output dir"
+            "-i",
+            "--input",
+            required=True,
+            type=str,
+            help="LBIBCell output dir or a single solver output (i.e. Cells_100.txt)",
         )
         parser.add_argument(
             "--force",
@@ -114,12 +121,15 @@ class LbibhelperMain:
         except FileNotFoundError:
             pass
 
-        solver_processor = SolverProcessor(args.input_dir, args.force)
-        solver_processor.save_npy()
-        if args.png:
-            solver_processor.plot_solver()
-        if args.gif:
-            solver_processor.png_to_gif()
+        if args.input.endswith(".txt") or args.input.endswith(".npy"):
+            plot_solver_matrix(args.input, shift=1e-10)
+        else:
+            solver_processor = SolverProcessor(args.input, args.force)
+            solver_processor.save_npy()
+            if args.png:
+                solver_processor.plot_solver()
+            if args.gif:
+                solver_processor.png_to_gif()
 
     @register
     def cell(self, arguments: list = sys.argv[2:]):
