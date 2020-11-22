@@ -78,9 +78,9 @@ def module_purge():
 
 
 def module_load_pyvista():
-    command = "module load "
-    +"new gcc/4.8.2 open_mpi/1.6.5 java/1.8.0_91 netcdf/4.3.2 python/3.6.1 "
-    +"qt/5.8.0 vtk/8.1.1 mesa/12.0.6"
+    command = "module load " \
+    + "new gcc/4.8.2 open_mpi/1.6.5 java/1.8.0_91 netcdf/4.3.2 python/3.6.1 " \
+    + "qt/5.8.0 vtk/8.1.1 mesa/12.0.6"
     from pkg_resources import get_distribution
 
     assert (

@@ -104,12 +104,16 @@ def _get_size(file):
 def get_solver_mat(file, flatten=False):
     filename, _ = os.path.splitext(file)
     npy = "{:s}.npy".format(filename)
-    if check_exists(npy):
+    try:
+        check_exists(npy)
         mat = np.load(npy)
-    else:
+    except FileNotFoundError:
         size_x, size_y = _get_size(file)
         mat = _get_np_from_txt(file, size_x, size_y)
         np.save(npy, mat)
+#     else:
+#         print(npy)
+#         raise FileNotFoundError(f'File {npy} not exist. or cannot be created')
 
     if flatten:
         # mean along y axis, average over x = [1, 1000]

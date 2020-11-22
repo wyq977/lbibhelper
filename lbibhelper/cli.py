@@ -117,7 +117,7 @@ class LbibhelperMain:
         args = parser.parse_args(arguments)
 
         try:
-            check_exists(args.input_dir)
+            check_exists(args.input)
         except FileNotFoundError:
             pass
 
